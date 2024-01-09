@@ -10,13 +10,29 @@ High level steps for storage creation/management
 6. mfks.xfs - Format the partion for the file system type.  This examples uses xfs - mkfs.xfs /dev/vdb1
 7. mkdir /backup  - Make a mount point if applicable
 8. Get the UUID of the parttion with lsblk --fs /dev/vdb1  We need this to update fstab.
-9. Update fstab
+9. Update fstab - UUID=41b5e977-07b8-40dc-94ef-57de91ca2bfc /backup xfs defaults 0 0
 10. systemctl daemon-reload - Force the systemctl daemon to reload to read the update fstab
 11. mount /backup - Mount the backup directory
 12. mount | grep /backup - Make sure /backup is mounted
 
 
 
+High level steps for creating an additional partition on drive that has been lableled and partition
+1. parted /dev/vdb print - See where the next partition becomes available
+2. parted /dev/vdb mkpart swap1 linux-swap 2000M 2512M - Make next partition
+3. parted /dev/vdb mkpart swap2 linux-swap 2512M 3024M - If making a third partion
+4. parted /dev/vdb print and lsblk - To verify work
+5. udevadm settle - Make sure the sytem recognizes the partition
+6. makeswap /dev/vdb1 and mkswap /dev/vdb2 to intialize (format) swap drives
+7. Update fstab - UUID=21ac624e-9d48-43b2-892a-bd5eab422ba6 swap swap pri=10 0 0
+8. systemctl daemon-reload - Force the systemctl daemon to reload to read the update fstab
+9. swapon -a - Activate swap
+10. swapon --show - Check swap is activate
+
+Check that the partitioning works on reboot
+1. systemctl reboot
+2. mount | grep /backup
+3. swapon --show
 
 
 Identify unused disks using lsblk command.  lsblk lists information about all available or the specified block devices. The lsblk command reads the sysfs filesystem and udev db to gather information. The command prints all block devices (except RAM disks) in a tree-like format by default.
