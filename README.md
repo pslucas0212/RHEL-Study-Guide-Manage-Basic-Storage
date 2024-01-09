@@ -1,6 +1,24 @@
 # RHEL Study Guide: Manage Basic Storage  
 [RHEL Study Guide - Table of Contents](https://github.com/pslucas0212/RHEL-Study-Guide)  
 
+High level steps for storage creation/management
+1. lsblk - Identify unused disks with lsblk command.
+2. parted print - Confirm a disk does not have a label with parted /dev/vdb print
+3. parted mklabel - Define the partitioning scheme if needed with parted /dev/vdb mklabel gpt
+4. parted mkpart - Make a partion with parted /dev/vdb mkpart backup xfs 2048s 2GB
+5. udevadm settle - Make sure the sytem recognizes the partition
+6. mfks.xfs - Format the partion for the file system type.  This examples uses xfs - mkfs.xfs /dev/vdb1
+7. mkdir /backup  - Make a mount point if applicable
+8. Get the UUID of the parttion with lsblk --fs /dev/vdb1  We need this to update fstab.
+9. Update fstab
+10. systemctl daemon-reload - Force the systemctl daemon to reload to read the update fstab
+11. mount /backup - Mount the backup directory
+12. mount | grep /backup - Make sure /backup is mounted
+
+
+
+
+
 Identify unused disks using lsblk command.  lsblk lists information about all available or the specified block devices. The lsblk command reads the sysfs filesystem and udev db to gather information. The command prints all block devices (except RAM disks) in a tree-like format by default.
 ```
 # lsblk
