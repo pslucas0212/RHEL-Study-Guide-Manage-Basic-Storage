@@ -2,14 +2,14 @@
 [RHEL Study Guide - Table of Contents](https://github.com/pslucas0212/RHEL-Study-Guide)  
 
 High level steps for storage creation/management
-1. lsblk - Identify unused disks with lsblk command.
+1. lsblk - Identify unused disks with lsblk command.  lsblk list block devices connected to your system
 2. parted print - Confirm a disk does not have a label with parted /dev/vdb print
 3. parted mklabel - Define the partitioning scheme if needed with parted /dev/vdb mklabel gpt
 4. parted mkpart - Make a partion with parted /dev/vdb mkpart backup xfs 2048s 2GB
 5. udevadm settle - Make sure the sytem recognizes the partition
 6. mfks.xfs - Format the partion for the file system type.  This examples uses xfs - mkfs.xfs /dev/vdb1
 7. mkdir /backup  - Make a mount point if applicable
-8. Get the UUID of the parttion with lsblk --fs /dev/vdb1  We need this to update fstab.
+8. Get the UUID of the parttion with lsblk --fs /dev/vdb1  We need this to update fstab.  lsblk --fs or lsblk -f gives you additional detail about filesystem including the UUID
 9. Update fstab - UUID=41b5e977-07b8-40dc-94ef-57de91ca2bfc /backup xfs defaults 0 0
 10. systemctl daemon-reload - Force the systemctl daemon to reload to read the update fstab
 11. mount /backup - Mount the backup directory
